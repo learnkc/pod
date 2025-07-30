@@ -87,7 +87,7 @@ async def health_check():
     return {
         "status": "healthy" if is_connected else "unhealthy",
         "ollama_status": message,
-        "model": "llama3.1:70b",
+        "model": "llama3.1:8b",
         "multi_gpu": True,
         "timestamp": datetime.now().isoformat()
     }
@@ -139,7 +139,7 @@ async def analyze_guest(request: AnalyzeRequest):
 
 if __name__ == "__main__":
     print("🚀 Starting Podcast Guest Tracker API (No Frontend)")
-    print("🎮 Configuring 6x GTX 1080 Ti for LLaMA 3.1 70B")
+    print("🎮 Using LLaMA 3.1 8B model")
     print("📊 API will be available at: http://localhost:8001")
     
     # Ensure Ollama is running before starting API

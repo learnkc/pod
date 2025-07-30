@@ -1,10 +1,10 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { sqliteTable, text, integer, blob } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const guests = pgTable("guests", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const guests = sqliteTable("guests", {
+  id: text("id").primaryKey().default(sql`(hex(randomblob(16)))`),
   name: text("name").notNull(),
   field: text("field"),
   bio: text("bio"),
@@ -12,18 +12,13 @@ export const guests = pgTable("guests", {
   trendingScore: integer("trending_score").default(0),
   compatibilityScore: integer("compatibility_score").default(0),
   region: text("region").default("global"),
-  socialMedia: jsonb("social_media").$type<{
-    twitter?: string;
-    linkedin?: string;
-    youtube?: string;
-    followers?: number;
-  }>(),
-  expertise: text("expertise").array(),
-  lastUpdated: timestamp("last_updated").defaultNow(),
+  socialMedia: text("social_media").$type<string>(), // JSON string
+  expertise: text("expertise").$type<string>(), // JSON string array
+  lastUpdated: text("last_updated").default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const channels = pgTable("channels", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const channels = sqliteTable("channels", {
+  id: text("id").primaryKey().default(sql`(hex(randomblob(16)))`),
   channelId: text("channel_id").unique().notNull(),
   channelUrl: text("channel_url").notNull(),
   title: text("title").notNull(),
@@ -32,13 +27,13 @@ export const channels = pgTable("channels", {
   videoCount: integer("video_count").default(0),
   viewCount: integer("view_count").default(0),
   engagementRate: text("engagement_rate").default("0%"),
-  topics: text("topics").array(),
+  topics: text("topics").$type<string>(), // JSON string array
   thumbnailUrl: text("thumbnail_url"),
-  lastAnalyzed: timestamp("last_analyzed").defaultNow(),
+  lastAnalyzed: text("last_analyzed").default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const analyses = pgTable("analyses", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const analyses = sqliteTable("analyses", {
+  id: text("id").primaryKey().default(sql`(hex(randomblob(16)))`),
   channelId: text("channel_id").notNull(),
   guestName: text("guest_name"),
   guestField: text("guest_field"),
@@ -48,18 +43,18 @@ export const analyses = pgTable("analyses", {
   trendingFactor: integer("trending_factor").default(0),
   topicOverlap: integer("topic_overlap").default(0),
   riskAssessment: text("risk_assessment").default("Medium"),
-  recommendations: text("recommendations").array(),
-  detailedReport: jsonb("detailed_report"),
-  createdAt: timestamp("created_at").defaultNow(),
+  recommendations: text("recommendations").$type<string>(), // JSON string array
+  detailedReport: text("detailed_report").$type<string>(), // JSON string
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const trendingTopics = pgTable("trending_topics", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const trendingTopics = sqliteTable("trending_topics", {
+  id: text("id").primaryKey().default(sql`(hex(randomblob(16)))`),
   name: text("name").notNull(),
   field: text("field").notNull(),
   score: integer("score").default(0),
   region: text("region").default("global"),
-  lastUpdated: timestamp("last_updated").defaultNow(),
+  lastUpdated: text("last_updated").default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const insertGuestSchema = createInsertSchema(guests).omit({

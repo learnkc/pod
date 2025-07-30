@@ -11,12 +11,12 @@ load_dotenv()
 class OllamaClient:
     def __init__(self):
         self.base_url = os.getenv('OLLAMA_URL', 'http://localhost:11434')
-        self.model = "llama3.1:70b"  # 70B model
+        self.model = "llama3.1:8b"  # 8B model for better performance
         self.max_retries = 3
         self.retry_delay = 5
     
     def generate_text(self, prompt, max_tokens=1000, temperature=0.7):
-        """Generate text with 70B model across multiple GPUs"""
+        """Generate text with 8B model"""
         url = f"{self.base_url}/api/generate"
         
         payload = {
@@ -27,15 +27,13 @@ class OllamaClient:
                 "temperature": temperature,
                 "num_predict": max_tokens,
                 "num_ctx": 4096,
-                "num_gpu": 6,        # Use all 6 GPUs
-                "num_thread": 32,    # Use more CPU threads
                 "repeat_penalty": 1.1
             }
         }
         
         for attempt in range(self.max_retries):
             try:
-                print(f"🤖 Calling LLM 70B Multi-GPU (attempt {attempt + 1}/{self.max_retries})...")
+                print(f"🤖 Calling LLM 8B (attempt {attempt + 1}/{self.max_retries})...")
                 response = requests.post(url, json=payload, timeout=300)  # 5 minute timeout
                 
                 if response.status_code == 200:
@@ -57,7 +55,7 @@ class OllamaClient:
                     continue
         
         return {
-            "generated_text": "70B model analysis temporarily unavailable.",
+            "generated_text": "LLM analysis temporarily unavailable.",
             "model": self.model,
             "error": "All retry attempts failed"
         }

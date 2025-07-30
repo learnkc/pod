@@ -7,6 +7,28 @@ import { storage } from './storage';
 
 const router = Router();
 
+// Health check for AI integration
+router.get('/ai/health', async (req, res) => {
+  try {
+    const engineRunning = await aiEngineService.ensureEngineRunning();
+    const ollamaStatus = await aiEngineService.checkOllamaStatus();
+    
+    res.json({
+      status: 'healthy',
+      aiEngine: engineRunning,
+      ollama: ollamaStatus.running,
+      model: ollamaStatus.model || 'Not found',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: 'unhealthy',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // Check AI engine status
 router.get('/ai/status', async (req, res) => {
   try {
