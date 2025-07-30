@@ -1,0 +1,8 @@
+ai_engine_venv/
+*.pyc
+__pycache__/
+*.log
+.DS_Store
+.env
+*.sqlite3
+
