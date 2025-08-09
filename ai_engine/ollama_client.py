@@ -11,7 +11,7 @@ load_dotenv()
 class OllamaClient:
     def __init__(self):
         self.base_url = os.getenv('OLLAMA_URL', 'http://localhost:11434')
-        self.model = "llama3.1:8b"  # 8B model for better performance
+        self.model = "llama4:latest"  # 8B model for better performance
         self.max_retries = 3
         self.retry_delay = 5
     
@@ -33,7 +33,9 @@ class OllamaClient:
         
         for attempt in range(self.max_retries):
             try:
-                print(f"🤖 Calling LLM 8B (attempt {attempt + 1}/{self.max_retries})...")
+                #print(f"🤖 Calling LLM 8B (attempt {attempt + 1}/{self.max_retries})...")
+                print(f"🤖 Calling LLM {self.model} (attempt {attempt + 1}/{self.max_retries})...")
+
                 response = requests.post(url, json=payload, timeout=300)  # 5 minute timeout
                 
                 if response.status_code == 200:

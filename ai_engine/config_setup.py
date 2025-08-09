@@ -8,7 +8,7 @@ load_dotenv()
 class Config:
     # LLM Configuration
     OLLAMA_URL = os.getenv('OLLAMA_URL', 'http://localhost:11434')
-    OLLAMA_MODEL = os.getenv('OLLAMA_MODEL', 'llama3.1:70b')
+    OLLAMA_MODEL = os.getenv('OLLAMA_MODEL', 'llama4:latest')
     
     # API Keys (optional - many scrapers work without them)
     YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY', '')
